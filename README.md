@@ -1,11 +1,16 @@
 # GibingTreeLite
 lightweight bot for gibings
 
+
+
 to install dependencies, use command 'npm i'
+
+to register slash command, use command 'node deploy-commands.js'
 
 to run the bot, use command 'node index.js'
 
 to run the mongodb, cd to 'mongoDB' and run command 'node server.js'
+
 
 
 all slash commands are found within /commands directory
