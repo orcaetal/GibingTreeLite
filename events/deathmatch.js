@@ -191,11 +191,11 @@ module.exports = {
 	name: 'messageUpdate',
 	async execute(oldMessage, message, client) {
 
-        //detect gibaway in message stream
+        	//detect gibaway in message stream
 		if (message.author.id == 1119451259481624726 && message.embeds.length != 0 && 'title' in message.embeds[0].data && message.embeds[0].data.title.includes('GIBAWAY ALERT')){
 			
-            //grab data from gibaway message
-            let gibType;
+            		//grab data from gibaway message
+            		let gibType;
 			let countDown;
 			let axieID;
 			message.embeds[0].data.fields.forEach((field) => {
@@ -208,7 +208,7 @@ module.exports = {
             if (gibType == 'Deathmatch'){
 
                 //bot react to own message
-				message.react('🍑');
+		message.react('🍑');
 
                 //init variables for game and countdown
                 let reviveDict = {};
@@ -222,25 +222,25 @@ module.exports = {
                 else if (countDown == '10 seconds') { countDownMS = 5000}
 
                 //define filter as every peach reaction except for bot
-				const filter = (reaction, user) => {
-					return reaction.emoji.name === '🍑' && !user.bot;
-				};
+		const filter = (reaction, user) => {
+			return reaction.emoji.name === '🍑' && !user.bot;
+		};
                 
                 //assign reaction collector to the gibaway message
-				const collector = message.createReactionCollector({ filter, time: countDownMS });
+		const collector = message.createReactionCollector({ filter, time: countDownMS });
 				
                 //fill initial list of players
-				collector.on('collect', (reaction, user) => {
+		collector.on('collect', (reaction, user) => {
                     if (!alive.includes(user)){
                         alive.push(user)
                         console.log(`Collected ${reaction.emoji} from ${user.tag}`);
                     }
 					
-				});
+		});
 				
                 //when collector ends, start game
-				collector.on('end', (collected, reason) => {
-					console.log("collection ended", collected);
+		collector.on('end', (collected, reason) => {
+			console.log("collection ended", collected);
 
                     let playerList = "";
 
