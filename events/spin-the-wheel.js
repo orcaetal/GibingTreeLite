@@ -43,10 +43,10 @@ module.exports = {
 	name: 'messageUpdate',
 	async execute(oldMessage, message, client) {
 		
-        //detect gibaway alert in message stream
+        	//detect gibaway alert in message stream
 		if (message.author.id == 1119451259481624726 && message.embeds.length != 0 && 'title' in message.embeds[0].data && message.embeds[0].data.title.includes('GIBAWAY ALERT')){
 
-            //capture data from gib message
+            		//capture data from gib message
 			let gibType;
 			let countDown;
 			let axieID;
@@ -72,22 +72,22 @@ module.exports = {
 
                 //define filter for adding players to game
                 let remainingUsers = [];
-				const filter = (reaction, user) => {
+		const filter = (reaction, user) => {
                     //all peaches except for bot
-					return reaction.emoji.name === '🍑' && !user.bot;
-				};
+			return reaction.emoji.name === '🍑' && !user.bot;
+		};
                 
                 //start reaction collector for gib message
-				const collector = message.createReactionCollector({ filter, time: countDownMS });
+		const collector = message.createReactionCollector({ filter, time: countDownMS });
 				
                 //add users to game from message collector
-				collector.on('collect', (reaction, user) => {
+		collector.on('collect', (reaction, user) => {
                     if (!remainingUsers.includes(user)){
                         remainingUsers.push(user)
                         console.log(`Collected ${reaction.emoji} from ${user.tag}`);
                     }
 					
-				});
+		});
 
                 //when collector ends, start game
                 collector.on('end', (collected, reason) => {
