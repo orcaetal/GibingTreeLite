@@ -54,14 +54,14 @@ module.exports = {
 			.setMinLength(46)
 			.setMaxLength(46))
 		,
-    //execute the /claim
+    	//execute the /claim
 	async execute(interaction) {
 
         //defer reply to allow time to think
         await interaction.deferReply();
 
         //grab data from /claim command
-		const roninAddress = interaction.options.getString('ronin-address').replace('ronin:','0x');
+	const roninAddress = interaction.options.getString('ronin-address').replace('ronin:','0x');
         const axieID = interaction.options.getString('axie-id');
         
         //check if prize is claimable by user
