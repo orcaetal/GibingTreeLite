@@ -291,6 +291,7 @@ module.exports = {
 							const spinEmbed = new EmbedBuilder()
 								.setTitle(`Round ${round}`)
 								.setColor(0xe5de00)
+								.setFooter({text: `${remainingUsers.length} players left`})
 								.setFields(
 									{ name: 'Dont get picked!', value: `${wheelString}`}
 								)
@@ -550,6 +551,7 @@ module.exports = {
 						const wheelEmbed = new EmbedBuilder()
 							.setTitle(`Round ${round}`)
 							.setColor(0xe5de00)
+							.setFooter({text: `${remainingUsers.length} players left`})
 							.setFields(
 								{ name: 'Dont get picked!', value: `${wheelString}`}
 							)

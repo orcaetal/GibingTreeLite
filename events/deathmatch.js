@@ -315,12 +315,12 @@ module.exports = {
 							if (eventSeed < .05){
 								alive.forEach((user) => {
 									
-									//leave at least 1 person alive, max 20 deaths per event
-									if (alive.length > 1 && messageList.length < 20){
+									//leave at least 1 person alive, max 30 deaths per event
+									if (alive.length > 1 && messageList.length < 30){
 										subSeed = Math.random();
 										//half of people die
 										if (subSeed < .5) {
-											messageList.push(`💀 ~~${user.username}~~`)
+											messageList.push(`💀 **~~${user.username}~~**`)
 											alive.splice(alive.indexOf(user),1)
 											dead.push(user);
 										}
@@ -352,8 +352,8 @@ module.exports = {
 							else if (eventSeed > .975){
 								dead.forEach((user) => {
 									//max 20 rebaybs per event
-									if (messageList.length < 20){
-										messageList.push(`💗 ${user.username}`)
+									if (messageList.length < 30){
+										messageList.push(`💗 **${user.username}**`)
 										dead.splice(dead.indexOf(user),1)
 										alive.push(user);
 									}
@@ -409,16 +409,14 @@ module.exports = {
 								else {revRate = .002;}
 
 								//check for individual deaths and rebaybs
-								let messageCount = 0;
 								masterList.forEach((user) => {
 									//deaths
 									if (alive.includes(user)){
-										//leave one alive, max 20 messages per round
-										if (alive.length > 1 && messageCount < 20){
+										//leave one alive, max 30 messages per round
+										if (alive.length > 1 && messageList.length < 30){
 											const seed = Math.random();
 											//someone dies
 											if (seed<deathRate){
-												messageCount+=1
 												let isKiller;
 
 												//define function for finding random killer
@@ -443,7 +441,7 @@ module.exports = {
 												}
 
 												//add text for embed message later
-												messageList.push('💀 '+deathMsg.replace('killee',`~~${user.username}~~`).replace('killer',`${isKiller}`))
+												messageList.push('💀 '+deathMsg.replace('killee',`**~~${user.username}~~**`).replace('killer',`**${isKiller}**`))
 												
 												//update alive and death lists
 												alive.splice(alive.indexOf(user),1)
@@ -453,30 +451,27 @@ module.exports = {
 											}
 
 											//bloodmoon deaths
-											else if (round >= 20 && messageCount < 20) {
+											else if (round >= 20 && messageList.length < 30) {
 												if (seed > .6) {
-													messageCount += 1;
 													console.log(`${user} killed bloodmoon`);
-													messageList.push(`🩸 ~~${user.username}~~ died to bloodmoon`);
+													messageList.push(`🩸 **~~${user.username}~~** died to bloodmoon`);
 													alive.splice(alive.indexOf(user),1);
 													dead.push(user);
 												}
 											}
-											else if (round >= 15 && messageCount < 20) {
+											else if (round >= 15 && messageList.length < 30) {
 												if (seed > .8) {
-													messageCount += 1;
 													console.log(`${user} killed bloodmoon`);
-													messageList.push(`🩸 ~~${user.username}~~ died to bloodmoon`)
+													messageList.push(`🩸 **~~${user.username}~~** died to bloodmoon`)
 													alive.splice(alive.indexOf(user),1)
 													dead.push(user);
 												}
 											}
 
 											//check for neutrals events
-											else if (seed >= deathRate && messageCount < 20){
+											else if (seed >= deathRate && messageList.length< 30){
 												if (seed > .99){
-													messageCount += 1;
-													messageList.push('🚶 '+neutralMessages[Math.floor(Math.random()*neutralMessages.length)].replace('thisUser',`${user.username}`))
+													messageList.push('🚶 '+neutralMessages[Math.floor(Math.random()*neutralMessages.length)].replace('thisUser',`**${user.username}**`))
 												}
 												console.log(`${user} survived`)
 											}
@@ -488,11 +483,10 @@ module.exports = {
 										const seed = Math.random();
 
 										//max 2 rebaybs per game, 20 messages per round
-										if (messageCount < 20 && reviveDict[user.tag] <= 2 && seed<revRate) {
+										if (messageList.length < 30 && reviveDict[user.tag] <= 2 && seed<revRate) {
 											
 											//choose random rebayb message, add to embed message for later
-											messageCount += 1;
-											messageList.push('💗 '+lifeMessages[Math.floor(Math.random()*lifeMessages.length)].replace('revivee',`${user.username}`).replace('reviver',`${alive[Math.floor(Math.random()*alive.length)].username}`))
+											messageList.push('💗 '+lifeMessages[Math.floor(Math.random()*lifeMessages.length)].replace('revivee',`**${user.username}**`).replace('reviver',`**${alive[Math.floor(Math.random()*alive.length)].username}**`))
 											
 											//incrememnt rebayb count for user
 											reviveDict[user.tag] += 1;
