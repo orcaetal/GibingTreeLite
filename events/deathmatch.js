@@ -401,12 +401,12 @@ module.exports = {
 								else {deathRate = .5;}
 
 								//set rev rates
-								if (dead.length < 10) {revRate = .075;}
-								else if (dead.length < 20) {revRate = .035;}
-								else if (dead.length < 50) {revRate = .016;}
-								else if (dead.length < 100) {revRate = .008;}
-								else if (dead.length < 150) {revRate = .003;}
-								else {revRate = .002;}
+								if (dead.length < 10) {revRate = .11;}
+								else if (dead.length < 20) {revRate = .055;}
+								else if (dead.length < 50) {revRate = .025;}
+								else if (dead.length < 100) {revRate = .015;}
+								else if (dead.length < 150) {revRate = .0075;}
+								else {revRate = .005;}
 
 								//check for individual deaths and rebaybs
 								masterList.forEach((user) => {
