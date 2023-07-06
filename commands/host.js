@@ -35,6 +35,30 @@ module.exports = {
 		)
 		.addSubcommand((subcommand) => 
 			subcommand
+				.setName('team-deathmatch')
+				.setDescription('team battle for tokens')
+				//this needs to be reworked for tokens. need .addStringOption -> option.setName('token') axs or slp?
+				// and addNumberOption (not sure of correct syntax here) -> option.setName('amount')
+				.addStringOption(option =>
+					option.setName('axie-id')
+						.setDescription('the axie to be given')
+						.setRequired(true))
+				.addStringOption(option =>
+					option.setName('countdown')
+					.setDescription('how long to wait before start')
+					.setRequired(true)
+					.addChoices(
+						{ name: '1 minute', value: '1 minute' },
+						{ name: '2 minutes', value: '2 minutes' },
+						{ name: '3 minutes', value: '3 minutes' },
+						{ name: '5 minutes', value: '5 minutes' },
+						{ name: '10 minutes', value: '10 minutes' },
+						{ name: 'test', value: '10 seconds' },
+						)
+					)
+		)
+		.addSubcommand((subcommand) => 
+			subcommand
 				.setName('spin-the-wheel')
 				.setDescription('spin a wheel to eliminate losers')
 				.addStringOption(option =>
@@ -100,6 +124,11 @@ module.exports = {
 									description = 'React with 🍑 to join'
 									footer.text = 'React with 🍑 to join'
 								}
+								if (interaction.options.getSubcommand() == 'team-deathmatch'){
+									gibType = "Team Deathmatch"
+									description = 'Join a team by reacting below'
+									footer.text = 'Pick a team by reacting!'
+								}
 								else if (interaction.options.getSubcommand() == 'spin-the-wheel'){
 									gibType = "Spin the Wheel"
 									description = 'Dont get picked!'
@@ -108,6 +137,7 @@ module.exports = {
 								
 								//build embed message for hosting
 								const axieImg = new AttachmentBuilder(`https://axiecdn.axieinfinity.com/axies/${interaction.options.getString("axie-id")}/axie/axie-full-transparent.png`);
+								//need a new hostEmbed to support token gibs. replace field "name: 'Axie ID'" with "name: 'token'"
 								const hostEmbed = new EmbedBuilder()
 									.setTitle(`🚨 GIBAWAY ALERT 🚨`)
 									.setDescription(`${description}`)
