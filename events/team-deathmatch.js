@@ -237,27 +237,27 @@ module.exports = {
 			let gibType;
 			let countDown;
 			let axieID;
-            //additional variables for team battle
-            //let token;
-            //let amount:
+			//additional variables for team battle
+			//let token;
+			//let amount:
 			message.embeds[0].data.fields.forEach((field) => {
 				if (field.name == 'Gib Type') {gibType = field.value}
 				else if (field.name == 'Countdown') {countDown = field.value}
 				else if (field.name == 'Axie ID') {axieID = field.value}
-                //token gib will look something like this
-                //else if (field.name == 'Token') {token = field.value}
-                //else if (field.name == 'Amount') {amount = field.value}
+				//token gib will look something like this
+				//else if (field.name == 'Token') {token = field.value}
+				//else if (field.name == 'Amount') {amount = field.value}
 			})
 			
 			//define actions and rules for deathmatch
 			if (gibType == 'Team Deathmatch'){
 
-                //replace emoijis with axie stuff
-                const team1Emoji = '🍑';
-                const team2Emoji = '🍓';
-                const team3Emoji = '🍋';
-                
-                //bot react to own message
+				//replace emoijis with axie stuff
+				const team1Emoji = '🍑';
+				const team2Emoji = '🍓';
+				const team3Emoji = '🍋';
+				
+				//bot react to own message
 				message.react(team1Emoji);
 				message.react(team2Emoji);
 				message.react(team3Emoji);
@@ -284,19 +284,19 @@ module.exports = {
 				//fill initial list of players
 				collector.on('collect', (reaction, user) => {
 					if (!alive.includes(user) && alive.length < 200){
-                        if (reaction.emoji.name == team1Emoji ){
-                            aliveTeam1.push(user)
-                            console.log(`Collected ${reaction.emoji} from ${user.username}`);
-                        }
-                        else if (reaction.emoji.name == team2Emoji ){
-                            aliveTeam2.push(user)
-                            console.log(`Collected ${reaction.emoji} from ${user.username}`);
-                        }
-                        else if (reaction.emoji.name == team3Emoji ){
-                            aliveTeam3.push(user)
-                            console.log(`Collected ${reaction.emoji} from ${user.username}`);
-                        }
-                        alive.push(user);
+						if (reaction.emoji.name == team1Emoji ){
+							aliveTeam1.push(user)
+							console.log(`Collected ${reaction.emoji} from ${user.username}`);
+						}
+						else if (reaction.emoji.name == team2Emoji ){
+							aliveTeam2.push(user)
+							console.log(`Collected ${reaction.emoji} from ${user.username}`);
+						}
+						else if (reaction.emoji.name == team3Emoji ){
+							aliveTeam3.push(user)
+							console.log(`Collected ${reaction.emoji} from ${user.username}`);
+						}
+						alive.push(user);
 					}
 				});
 				
@@ -337,10 +337,10 @@ module.exports = {
 						let deathRate;
 						let messageList = [];
 
-                        //combine all alive players
-                        alive = aliveTeam1.concat(aliveTeam2).concat(aliveTeam3);
-                        //combine all dead players
-                        dead = deadTeam1.concat(deadTeam2).concat(deadTeam3);
+						//combine all alive players
+						alive = aliveTeam1.concat(aliveTeam2).concat(aliveTeam3);
+						//combine all dead players
+						dead = deadTeam1.concat(deadTeam2).concat(deadTeam3);
 
 						//while at least two teams still alive
 						if ((aliveTeam1.length > 0 && aliveTeam2.length > 0) || (aliveTeam2.length > 0 && aliveTeam3.length > 0) || (aliveTeam1.length > 0 && aliveTeam3.length > 0)){
@@ -356,26 +356,26 @@ module.exports = {
 										//half of people die
 										if (subSeed < .5) {
 
-                                            //adjust master lists
-                                            alive.splice(alive.indexOf(user),1)
-                                            dead.push(user);
+											//adjust master lists
+											alive.splice(alive.indexOf(user),1)
+											dead.push(user);
 
-                                            //adjust individual lists
-                                            if (aliveTeam1.includes(user)){
-                                                messageList.push(`💀 ${team1Emoji} **~~${user.username}~~** ${team1Emoji} `)
-                                                aliveTeam1.splice(aliveTeam1.indexOf(user),1)
-                                                deadTeam1.push(user);
-                                            }
-                                            else if (aliveTeam2.includes(user)){
-                                                messageList.push(`💀 ${team2Emoji} **~~${user.username}~~** ${team2Emoji} `)
-                                                aliveTeam2.splice(aliveTeam2.indexOf(user),1)
-                                                deadTeam2.push(user);
-                                            }
-                                            else if (aliveTeam3.includes(user)){
-                                                messageList.push(`💀 ${team3Emoji} **~~${user.username}~~** ${team3Emoji} `)
-                                                aliveTeam3.splice(aliveTeam3.indexOf(user),1)
-                                                deadTeam3.push(user);
-                                            }
+											//adjust individual lists
+											if (aliveTeam1.includes(user)){
+												messageList.push(`💀 ${team1Emoji} **~~${user.username}~~** ${team1Emoji} `)
+												aliveTeam1.splice(aliveTeam1.indexOf(user),1)
+												deadTeam1.push(user);
+											}
+											else if (aliveTeam2.includes(user)){
+												messageList.push(`💀 ${team2Emoji} **~~${user.username}~~** ${team2Emoji} `)
+												aliveTeam2.splice(aliveTeam2.indexOf(user),1)
+												deadTeam2.push(user);
+											}
+											else if (aliveTeam3.includes(user)){
+												messageList.push(`💀 ${team3Emoji} **~~${user.username}~~** ${team3Emoji} `)
+												aliveTeam3.splice(aliveTeam3.indexOf(user),1)
+												deadTeam3.push(user);
+											}
 											
 										}
 									}
@@ -408,26 +408,26 @@ module.exports = {
 									//max 20 rebaybs per event
 									if (messageList.length < 30){
 
-                                        //adjust master lists
-                                        dead.splice(dead.indexOf(user),1)
+										//adjust master lists
+										dead.splice(dead.indexOf(user),1)
 										alive.push(user);
 
-                                        //adjust team lists
-                                        if (deadTeam1.includes(user)){
-                                            messageList.push(`💗 ${team1Emoji} **${user.username}** ${team1Emoji}`)
-                                            deadTeam1.splice(deadTeam1.indexOf(user),1)
-                                            aliveTeam1.push(user);
-                                        }
-                                        if (deadTeam2.includes(user)){
-                                            messageList.push(`💗 ${team2Emoji} **${user.username}** ${team2Emoji}`)
-                                            deadTeam2.splice(deadTeam2.indexOf(user),1)
-                                            aliveTeam2.push(user);
-                                        }
-                                        if (deadTeam3.includes(user)){
-                                            messageList.push(`💗 ${team3Emoji} **${user.username}** ${team3Emoji}`)
-                                            deadTeam3.splice(deadTeam3.indexOf(user),1)
-                                            aliveTeam3.push(user);
-                                        }
+										//adjust team lists
+										if (deadTeam1.includes(user)){
+											messageList.push(`💗 ${team1Emoji} **${user.username}** ${team1Emoji}`)
+											deadTeam1.splice(deadTeam1.indexOf(user),1)
+											aliveTeam1.push(user);
+										}
+										if (deadTeam2.includes(user)){
+											messageList.push(`💗 ${team2Emoji} **${user.username}** ${team2Emoji}`)
+											deadTeam2.splice(deadTeam2.indexOf(user),1)
+											aliveTeam2.push(user);
+										}
+										if (deadTeam3.includes(user)){
+											messageList.push(`💗 ${team3Emoji} **${user.username}** ${team3Emoji}`)
+											deadTeam3.splice(deadTeam3.indexOf(user),1)
+											aliveTeam3.push(user);
+										}
 										
 									}
 								})
@@ -491,33 +491,33 @@ module.exports = {
 											//someone dies
 											if (seed<deathRate){
 												let isKiller;
-                                                let killedEmoji;
-                                                let killerEmoji;
+												let killedEmoji;
+												let killerEmoji;
 
 												//define function for finding random killer
 												let findKiller = () => {
 													isKiller = alive[Math.floor(Math.random()*alive.length)]
-                                                    console.log('killer', isKiller)
+													console.log('killer', isKiller)
 
 													//no suicides
 													if (isKiller == user){
 														findKiller()
 													}
-                                                    //cant kill teammate
-                                                    else if ((aliveTeam1.includes(user) && aliveTeam1.includes(isKiller)) || (aliveTeam2.includes(user) && aliveTeam2.includes(isKiller)) || (aliveTeam3.includes(user) && aliveTeam3.includes(isKiller))) {
-                                                        findKiller()
-                                                    }
+													//cant kill teammate
+													else if ((aliveTeam1.includes(user) && aliveTeam1.includes(isKiller)) || (aliveTeam2.includes(user) && aliveTeam2.includes(isKiller)) || (aliveTeam3.includes(user) && aliveTeam3.includes(isKiller))) {
+														findKiller()
+													}
 													else {
 														killDict[isKiller.username] += 1;
-                                                        if (aliveTeam1.includes(isKiller)) {
-                                                            killerEmoji = team1Emoji;
-                                                        }
-                                                        else if (aliveTeam2.includes(isKiller)) {
-                                                            killerEmoji = team2Emoji;
-                                                        }
-                                                        else if (aliveTeam3.includes(isKiller)) {
-                                                            killerEmoji = team3Emoji;
-                                                        }
+														if (aliveTeam1.includes(isKiller)) {
+															killerEmoji = team1Emoji;
+														}
+														else if (aliveTeam2.includes(isKiller)) {
+															killerEmoji = team2Emoji;
+														}
+														else if (aliveTeam3.includes(isKiller)) {
+															killerEmoji = team3Emoji;
+														}
 													}
 												}
 
@@ -533,30 +533,30 @@ module.exports = {
 												alive.splice(alive.indexOf(user),1)
 												dead.push(user);
 
-                                                //update team lists and find correct emojis
-                                                if (aliveTeam1.includes(user)){
-                                                    killedEmoji = team1Emoji;
-                                                    aliveTeam1.splice(aliveTeam1.indexOf(user),1)
-                                                    deadTeam1.push(user);
-                                                }
-                                                else if (aliveTeam2.includes(user)){
-                                                    killedEmoji = team2Emoji;
-                                                    aliveTeam2.splice(aliveTeam2.indexOf(user),1)
-                                                    deadTeam2.push(user);
-                                                }
-                                                else if (aliveTeam3.includes(user)){
-                                                    killedEmoji = team3Emoji;
-                                                    aliveTeam3.splice(aliveTeam3.indexOf(user),1)
-                                                    deadTeam3.push(user);
-                                                }
+												//update team lists and find correct emojis
+												if (aliveTeam1.includes(user)){
+													killedEmoji = team1Emoji;
+													aliveTeam1.splice(aliveTeam1.indexOf(user),1)
+													deadTeam1.push(user);
+												}
+												else if (aliveTeam2.includes(user)){
+													killedEmoji = team2Emoji;
+													aliveTeam2.splice(aliveTeam2.indexOf(user),1)
+													deadTeam2.push(user);
+												}
+												else if (aliveTeam3.includes(user)){
+													killedEmoji = team3Emoji;
+													aliveTeam3.splice(aliveTeam3.indexOf(user),1)
+													deadTeam3.push(user);
+												}
 
-                                                //add text for embed message later
-                                                if (deathMsg.includes('killer')){
-												    messageList.push('💀 '+deathMsg.replace('killee',`${killedEmoji} **~~${user.username}~~** ${killedEmoji}`).replace('killer',`${killerEmoji} **${isKiller.username}** ${killerEmoji}`))
-                                                }
-                                                else{
-												    messageList.push('💀 '+deathMsg.replace('killee',`${killedEmoji} **~~${user.username}~~** ${killedEmoji}`))
-                                                }
+												//add text for embed message later
+												if (deathMsg.includes('killer')){
+													messageList.push('💀 '+deathMsg.replace('killee',`${killedEmoji} **~~${user.username}~~** ${killedEmoji}`).replace('killer',`${killerEmoji} **${isKiller.username}** ${killerEmoji}`))
+												}
+												else{
+													messageList.push('💀 '+deathMsg.replace('killee',`${killedEmoji} **~~${user.username}~~** ${killedEmoji}`))
+												}
 												
 												console.log(`${user} died`)
 											}
@@ -565,27 +565,27 @@ module.exports = {
 											else if (round >= 20 && messageList.length < 30) {
 												if (seed > .6) {
 
-                                                    //update team lists and find correct emojis
-                                                    if (aliveTeam1.includes(user)){
-                                                        killedEmoji = team1Emoji;
-                                                        aliveTeam1.splice(aliveTeam1.indexOf(user),1)
-                                                        deadTeam1.push(user);
-                                                    }
-                                                    if (aliveTeam2.includes(user)){
-                                                        killedEmoji = team2Emoji;
-                                                        aliveTeam2.splice(aliveTeam2.indexOf(user),1)
-                                                        deadTeam2.push(user);
-                                                    }
-                                                    if (aliveTeam3.includes(user)){
-                                                        killedEmoji = team3Emoji;
-                                                        aliveTeam3.splice(aliveTeam3.indexOf(user),1)
-                                                        deadTeam3.push(user);
-                                                    }
+													//update team lists and find correct emojis
+													if (aliveTeam1.includes(user)){
+														killedEmoji = team1Emoji;
+														aliveTeam1.splice(aliveTeam1.indexOf(user),1)
+														deadTeam1.push(user);
+													}
+													if (aliveTeam2.includes(user)){
+														killedEmoji = team2Emoji;
+														aliveTeam2.splice(aliveTeam2.indexOf(user),1)
+														deadTeam2.push(user);
+													}
+													if (aliveTeam3.includes(user)){
+														killedEmoji = team3Emoji;
+														aliveTeam3.splice(aliveTeam3.indexOf(user),1)
+														deadTeam3.push(user);
+													}
 
 													console.log(`${user} killed bloodmoon`);
 													messageList.push(`🩸 ${killedEmoji} **~~${user.username}~~** ${killedEmoji} died to bloodmoon`);
 
-                                                    //update master lists
+													//update master lists
 													alive.splice(alive.indexOf(user),1);
 													dead.push(user);
 												}
@@ -594,26 +594,26 @@ module.exports = {
 												if (seed > .8) {
 
 													//update team lists and find correct emojis
-                                                    if (aliveTeam1.includes(user)){
-                                                        killedEmoji = team1Emoji;
-                                                        aliveTeam1.splice(aliveTeam1.indexOf(user),1)
-                                                        deadTeam1.push(user);
-                                                    }
-                                                    else if (aliveTeam2.includes(user)){
-                                                        killedEmoji = team2Emoji;
-                                                        aliveTeam2.splice(aliveTeam2.indexOf(user),1)
-                                                        deadTeam2.push(user);
-                                                    }
-                                                    else if (aliveTeam3.includes(user)){
-                                                        killedEmoji = team3Emoji;
-                                                        aliveTeam3.splice(aliveTeam3.indexOf(user),1)
-                                                        deadTeam3.push(user);
-                                                    }
-                                                    
+													if (aliveTeam1.includes(user)){
+														killedEmoji = team1Emoji;
+														aliveTeam1.splice(aliveTeam1.indexOf(user),1)
+														deadTeam1.push(user);
+													}
+													else if (aliveTeam2.includes(user)){
+														killedEmoji = team2Emoji;
+														aliveTeam2.splice(aliveTeam2.indexOf(user),1)
+														deadTeam2.push(user);
+													}
+													else if (aliveTeam3.includes(user)){
+														killedEmoji = team3Emoji;
+														aliveTeam3.splice(aliveTeam3.indexOf(user),1)
+														deadTeam3.push(user);
+													}
+													
 													console.log(`${user} killed bloodmoon`);
 													messageList.push(`🩸 ${killedEmoji} **~~${user.username}~~** ${killedEmoji} died to bloodmoon`);
 
-                                                    //update master lists
+													//update master lists
 													alive.splice(alive.indexOf(user),1);
 													dead.push(user);
 												}
@@ -631,28 +631,28 @@ module.exports = {
 
 									//rebaybs
 									else if (dead.includes(user)){
-                                        let rebaybEmoji;
+										let rebaybEmoji;
 										const seed = Math.random();
 
 										//max 2 rebaybs per game, 20 messages per round
 										if (messageList.length < 30 && reviveDict[user.tag] <= 2 && seed<revRate) {
 											
-                                            //choose team emojis and update team lists
-                                            if (deadTeam1.includes(user)){
-                                                rebaybEmoji = team1Emoji;
-                                                deadTeam1.splice(deadTeam1.indexOf(user),1)
-                                                aliveTeam1.push(user);
-                                            }
-                                            else if (deadTeam2.includes(user)){
-                                                rebaybEmoji = team2Emoji;
-                                                deadTeam2.splice(deadTeam2.indexOf(user),1)
-                                                aliveTeam2.push(user);
-                                            }
-                                            else if (deadTeam3.includes(user)){
-                                                rebaybEmoji = team3Emoji;
-                                                deadTeam3.splice(deadTeam3.indexOf(user),1)
-                                                aliveTeam3.push(user);
-                                            }
+											//choose team emojis and update team lists
+											if (deadTeam1.includes(user)){
+												rebaybEmoji = team1Emoji;
+												deadTeam1.splice(deadTeam1.indexOf(user),1)
+												aliveTeam1.push(user);
+											}
+											else if (deadTeam2.includes(user)){
+												rebaybEmoji = team2Emoji;
+												deadTeam2.splice(deadTeam2.indexOf(user),1)
+												aliveTeam2.push(user);
+											}
+											else if (deadTeam3.includes(user)){
+												rebaybEmoji = team3Emoji;
+												deadTeam3.splice(deadTeam3.indexOf(user),1)
+												aliveTeam3.push(user);
+											}
 
 											//choose random rebayb message, add to embed message for later
 											messageList.push('💗 '+ lifeMessages[Math.floor(Math.random()*lifeMessages.length)].replace('revivee',`${rebaybEmoji} **${user.username}** ${rebaybEmoji} `).replace('reviver',`**${alive[Math.floor(Math.random()*alive.length)].username}**`))
@@ -683,20 +683,20 @@ module.exports = {
 								const topKills = Object.entries(killDict)
 									.sort((curr, next) => next[1] - curr[1])
 								topKills.slice(0,2).forEach((topKiller)=>{
-                                    console.log('topkiller',topKiller)
+									console.log('topkiller',topKiller)
 									if (topKiller[1] > 0) {
-                                        let topKillEmoji = '';
-                                        
-                                        //choose team emojis
-                                        if (deadTeam1.includes(topKiller[0]) || aliveTeam1.includes(topKiller[0])){
-                                            topKillEmoji = team1Emoji;
-                                        }
-                                        else if (deadTeam2.includes(topKiller[0]) || aliveTeam2.includes(topKiller[0])){
-                                            topKillEmoji = team2Emoji;
-                                        }
-                                        else if (deadTeam3.includes(topKiller[0]) || aliveTeam3.includes(topKiller[0])){
-                                            topKillEmoji = team3Emoji;
-                                        }
+										let topKillEmoji = '';
+										
+										//choose team emojis
+										if (deadTeam1.includes(topKiller[0]) || aliveTeam1.includes(topKiller[0])){
+											topKillEmoji = team1Emoji;
+										}
+										else if (deadTeam2.includes(topKiller[0]) || aliveTeam2.includes(topKiller[0])){
+											topKillEmoji = team2Emoji;
+										}
+										else if (deadTeam3.includes(topKiller[0]) || aliveTeam3.includes(topKiller[0])){
+											topKillEmoji = team3Emoji;
+										}
 										topKillsString+=`${topKillEmoji} ${topKiller[1]} ${topKiller[0]} ${topKillEmoji} \n`
 									}
 								})
@@ -720,7 +720,7 @@ module.exports = {
 
 						//finally someone won the game
 						else{
-                            //this needs extensive changes to split rewards between winning team
+							//this needs extensive changes to split rewards between winning team
 
 							//add winner record to mongodb so winner can claim later
 							axios.post("http://localhost:8080/api/winner",{ "user":alive[0].id,"axieID":axieID})
