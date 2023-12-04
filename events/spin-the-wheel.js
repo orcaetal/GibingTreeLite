@@ -3,6 +3,33 @@ const axios = require("axios");
 
 const timeout = 15000
 
+//define function for crystal api call
+const editCrystals = async (crystalUserID, crystals) => {
+    //check if user exists
+    axios.get(`http://localhost:8080/api/crystal/userID/${crystalUserID}`)
+        .then((res)=>{
+            console.log(res.data.result)
+            if (res.data.result == null){
+                //add new record
+                axios.post("http://localhost:8080/api/crystal",{ "user":crystalUserID,"balance":crystals})
+                    .then((res2)=>{
+                        console.log('crystal record added to database')})
+                    .catch((err2)=>{
+                        //console.log(err2);
+                        console.log('crystal record not added to database')})
+            }
+            else{
+                //edit record
+                axios.put(`http://localhost:8080/api/crystals/${res.data.result._id}`,{ "balance":String(parseInt(res.data.result.balance) + crystals)})
+                    .then((res3)=>{
+                        console.log('crystal record edited')})
+                    .catch((err3)=>{
+                        //console.log(err3);
+                        console.log('crystal record not edited')})
+            }
+        })
+}
+
 //fisher-yates shuffle
 function shuffle(array) {
 	for (let i = array.length - 1; i > 0; i--) {
@@ -111,11 +138,42 @@ module.exports = {
 					let notPointer = message.guild.emojis.cache.find((emoji)=>emoji.name=='Red_Flame')
 
 					//define function for sending loser message
-					const sendLoser = async (losers) => {
+					const sendLoser = async (losers, firstOrLast = 'no') => {
 						loserMessage = '';
 						losers.forEach((loser) => {
-							loserMessage += `${loser.username} is out!!\n\n`
+							
+							//random GC
+							let gcOption = '';
+							const jackpotSpin = Math.random()
+							if (jackpotSpin > .9999){
+								editCrystals(loser.id,60);
+								gcOption = `\n🔮 ${loser.username} hit the ultra jackpot on the way out +60 GC 🔮`
+							}
+							else if (jackpotSpin > .999){
+								editCrystals(loser.id,25);
+								gcOption = `\n🔮 ${loser.username} hit the ultra jackpot on the way out +60 GC 🔮`
+							}
+							else if (jackpotSpin > .99){
+								editCrystals(loser.id,10);
+								gcOption = `\n🔮 ${loser.username} hit the ultra jackpot on the way out +60 GC 🔮`
+							}
+							else if (jackpotSpin > .9){
+								editCrystals(loser.id,2);
+								gcOption = `\n🔮 RNGzus gave +2 GC for ${loser.username} 🔮`
+							}
+
+							//first blood or second place
+							if (firstOrLast == 'first'){
+								editCrystals(loser.id,5);
+								gcOption = `\n🔮 First Blood!! ${loser.username} gets +5 GC 🔮`
+							}
+							else if (firstOrLast == 'last'){
+								editCrystals(loser.id,5);
+								gcOption = `\n🔮 So close!! ${loser.username} gets +5 GC 🔮`
+							}
+							loserMessage += `${loser.username} is out!!\n\n ${gcOption}`
 						})
+
 						const loseEmbed = new EmbedBuilder()
 							.setDescription(`${loserMessage}`)
 							.setColor(0xe5de00)
@@ -397,8 +455,15 @@ module.exports = {
 								//less than 12 users, elim 1
 								else{
 									let loserList = []
+									let lastOrFirst = 'no';
+									if (round == 1){
+										lastOrFirst = 'first'
+									}
+									else if (remainingUsers.length == 2){
+										lastOrFirst = 'last'
+									}
 									loserList.push(remainingUsers[index]);
-									setTimeout(()=>{sendLoser(loserList)},1500);
+									setTimeout(()=>{sendLoser(loserList,lastOrFirst)},1500);
 									remainingUsers.splice(index, 1);
 								}
 							}

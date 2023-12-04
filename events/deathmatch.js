@@ -2,6 +2,33 @@ const { Events, AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const axios = require("axios");
 
 
+//define function for crystal api call
+const editCrystals = async (crystalUserID, crystals) => {
+    //check if user exists
+    axios.get(`http://localhost:8080/api/crystal/userID/${crystalUserID}`)
+        .then((res)=>{
+            console.log(res.data.result)
+            if (res.data.result == null){
+                //add new record
+                axios.post("http://localhost:8080/api/crystal",{ "user":crystalUserID,"balance":crystals})
+                    .then((res2)=>{
+                        console.log('crystal record added to database')})
+                    .catch((err2)=>{
+                        //console.log(err2);
+                        console.log('crystal record not added to database')})
+            }
+            else{
+                //edit record
+                axios.put(`http://localhost:8080/api/crystals/${res.data.result._id}`,{ "balance":String(parseInt(res.data.result.balance) + crystals)})
+                    .then((res3)=>{
+                        console.log('crystal record edited')})
+                    .catch((err3)=>{
+                        //console.log(err3);
+                        console.log('crystal record not edited')})
+            }
+        })
+}
+
 //define function for editing mongodb leaderboard
 const editLeaders = async (leaderUser) => {
 	//check if user exists
@@ -130,6 +157,7 @@ const deathMessages = [
 	"killee taught themself how to fly",
 	"killee ate too much Jollibee",
 	"killee went ice skating in the summer",
+	"Snowy emptied killee's wallet",
 	"killee ate gas station sushi"
 ]
 
@@ -207,10 +235,9 @@ const eventMessages = [
 	"It rained bowling balls!",
 	"ET Cult attacked!",
 	"The Lunacian Express derailed!",
-	"BYAK ATTACK!!!!",
+	"BYAC ATTACK!!!!",
 	"Bread man unleashed a storm of guillotines"
 ]
-
 
 //fisher-yates shuffle
 function shuffle(array) {
@@ -276,7 +303,7 @@ module.exports = {
 					//init dicts for counting number of deaths and rebaybs
 					alive.forEach((user) =>{
 						reviveDict[user.tag] = 0;
-						killDict[user.username] = 0;
+						killDict[user.username] = [0,user.id];
 					})
 
 					//allow extra time to process
@@ -408,6 +435,7 @@ module.exports = {
 								else if (dead.length < 150) {revRate = .0075;}
 								else {revRate = .005;}
 
+								let killedCount = 0;
 								//check for individual deaths and rebaybs
 								masterList.forEach((user) => {
 									//deaths
@@ -417,6 +445,7 @@ module.exports = {
 											const seed = Math.random();
 											//someone dies
 											if (seed<deathRate){
+												killedCount+=1;
 												let isKiller;
 
 												//define function for finding random killer
@@ -428,10 +457,11 @@ module.exports = {
 														findKiller()
 													}
 													else {
-														killDict[isKiller] += 1;
+														killDict[isKiller][0] += 1;
 													}
 												}
 
+												
 												//choose random death message
 												const deathMsg = deathMessages[Math.floor(Math.random()*deathMessages.length)];
 												
@@ -448,6 +478,37 @@ module.exports = {
 												dead.push(user);
 
 												console.log(`${user} died`)
+
+												//first blood
+												if (round == 1 && killedCount == 1){
+                                                    editCrystals(user.id,5);
+                                                    messageList.push(`🔮 First Blood! +5 GC for ${user.username}`)
+                                                }
+
+												//random GC
+												const jackpotSpin = Math.random()
+												if (jackpotSpin > .9999){
+													editCrystals(user.id,60);
+													messageList.push(`🔮 ${user.username} hit the ultra jackpot on the way out +60 GC 🔮`)
+												}
+												else if (jackpotSpin > .999){
+													editCrystals(user.id,25);
+													messageList.push(`🔮 ${user.username} hit the mega jackpot on the way out +25 GC 🔮`)
+												}
+												else if (jackpotSpin > .99){
+													editCrystals(user.id,10);
+													messageList.push(`🔮 ${user.username} hit the minor jackpot on the way out +10 GC 🔮`)
+												}
+												else if (jackpotSpin > .9){
+													editCrystals(user.id,2);
+													messageList.push(`🔮 RNGzus gave +2 GC for ${user.username}`)
+												}
+
+												//second place
+												if (alive.length == 1){
+													editCrystals(user.id,5);
+													messageList.push(`🔮 So close! +5 GC for ${user.username}`)
+												}
 											}
 
 											//bloodmoon deaths
@@ -457,6 +518,10 @@ module.exports = {
 													messageList.push(`🩸 **~~${user.username}~~** died to bloodmoon`);
 													alive.splice(alive.indexOf(user),1);
 													dead.push(user);
+													if (alive.length == 1){
+                                                        editCrystals(user.id,5);
+                                                        messageList.push(`🔮 So close! +5 GC for ${user}`)
+                                                    }
 												}
 											}
 											else if (round >= 15 && messageList.length < 30) {
@@ -465,6 +530,10 @@ module.exports = {
 													messageList.push(`🩸 **~~${user.username}~~** died to bloodmoon`)
 													alive.splice(alive.indexOf(user),1)
 													dead.push(user);
+													if (alive.length == 1){
+                                                        editCrystals(user.id,5);
+                                                        messageList.push(`🔮 So close! +5 GC for ${user}`)
+                                                    }
 												}
 											}
 
@@ -512,10 +581,10 @@ module.exports = {
 								//build top kills leaderboard for embed message
 								let topKillsString = "";
 								const topKills = Object.entries(killDict)
-									.sort((curr, next) => next[1] - curr[1])
+									.sort((curr, next) => next[1][0] - curr[1][0])
 								topKills.slice(0,2).forEach((topKiller)=>{
-									if (topKiller[1] > 0) {
-										topKillsString+=`${topKiller[1]}  ${topKiller[0]}\n`
+									if (topKiller[1][0] > 0) {
+										topKillsString+=`${topKiller[1][0]}  ${topKiller[0]}\n`
 									}
 								})
 								if (topKillsString.length ==0){topKillsString="None"}
@@ -541,6 +610,28 @@ module.exports = {
 
 							//update leaderboard on mongodb
 							editLeaders(alive[0]);
+
+							//topKills GC
+							const topKills = Object.entries(killDict)
+								.sort((curr, next) => next[1][0] - curr[1][0])
+
+							let winnerCounter = 0;
+							topKills.slice(0,2).forEach((topKiller)=>{
+								if (topKiller[1][0] > 0) {
+									//first place
+									if (winnerCounter==0){
+										editCrystals(topKiller[1][1],5);
+										message.client.channels.cache.get(message.channel.id.toString()).send(`🔮Top Kills 1st place: ${topKiller[0]} +5 GC🔮`);
+										winnerCounter+=1;
+									}
+									//second place
+									else{
+										editCrystals(topKiller[1][1],3);
+										message.client.channels.cache.get(message.channel.id.toString()).send(`🔮Top Kills 2nd place: ${topKiller[0]} +3 GC🔮`);
+									}
+								}
+							})
+							
 
 							//add winner record to mongodb so winner can claim later
 							axios.post("http://localhost:8080/api/winner",{ "user":alive[0].id,"axieID":axieID})
